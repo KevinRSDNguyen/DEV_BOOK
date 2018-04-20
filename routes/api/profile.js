@@ -1,44 +1,61 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
-const passport = require('passport');
+const mongoose = require("mongoose");
+const passport = require("passport");
+
+//Load Validation
+const validateProfileInput = require("./../../validation/profile");
 
 //Load Models
-const Profile = require('./../../models/Profile');
-const User = require('./../../models/User');
+const Profile = require("./../../models/Profile");
+const User = require("./../../models/User");
 
 // @route   GET api/profile/test
 // @desc    Tests profile route
 // @access  Public
-router.get('/test', (req, res) => {
-  res.json({ msg: 'Profile works' });
+router.get("/test", (req, res) => {
+  res.json({ msg: "Profile works" });
 });
 
 // @route   GET api/profile
 // @desc    Get current users profile
 // @access  Private
-router.get('/', passport.authenticate('jwt', { session: false }),
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const errors = {};
 
-    Profile.findOne({ user: req.user.id }).then(profile => {
-      if (!profile) {
-        errors.noprofile = 'There is no profile for this user';
-        return res.status(404).json(errors);
-      }
-      res.json(profile);
-    }).catch(err => {
-      res.status(404).json(err);
-    });
-  });
+    Profile.findOne({ user: req.user.id })
+      .populate("user", ["name", "avatar"])
+      .then(profile => {
+        if (!profile) {
+          errors.noprofile = "There is no profile for this user";
+          return res.status(404).json(errors);
+        }
+        res.json(profile);
+      })
+      .catch(err => {
+        res.status(404).json(err);
+      });
+  }
+);
 
 // @route   POST api/profile
 // @desc    Create or Edit User Profile
 // @access  Private
-router.post('/', passport.authenticate('jwt', { session: false }),
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     //Get fields
-    const profileFields = {};
+    const profileFields = {}; //Ensure only approved fields get saved. So no req.body.meow, etc.
     profileFields.user = req.user.id;
     if (req.body.handle) profileFields.handle = req.body.handle;
     if (req.body.company) profileFields.company = req.body.company;
@@ -46,10 +63,11 @@ router.post('/', passport.authenticate('jwt', { session: false }),
     if (req.body.location) profileFields.location = req.body.location;
     if (req.body.bio) profileFields.bio = req.body.bio;
     if (req.body.status) profileFields.status = req.body.status;
-    if (req.body.githubusername) profileFields.githubusername = req.body.githubusername;
+    if (req.body.githubusername)
+      profileFields.githubusername = req.body.githubusername;
     // Skills - Split into array
-    if (typeof req.body.skills !== 'undefined') {
-      profileFields.skills = req.body.skills.split(',');
+    if (typeof req.body.skills !== "undefined") {
+      profileFields.skills = req.body.skills.split(",");
     }
 
     // Social
@@ -63,18 +81,16 @@ router.post('/', passport.authenticate('jwt', { session: false }),
     Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
         //Update
-        Profile.findOneAndUpdate(
-          { user: req.user.id },
-          profileFields,
-          { new: true }
-        ).then(profile => res.json(profile));
+        Profile.findOneAndUpdate({ user: req.user.id }, profileFields, {
+          new: true
+        }).then(profile => res.json(profile));
       } else {
         //Create
 
         //Check if Handle exists
         Profile.findOne({ handle: profileFields.handle }).then(profile => {
           if (profile) {
-            errors.handle = 'That handle already exists';
+            errors.handle = "That handle already exists";
             return res.status(400).json(errors);
           }
 
@@ -83,6 +99,7 @@ router.post('/', passport.authenticate('jwt', { session: false }),
         });
       }
     });
-  });
+  }
+);
 
 module.exports = router;
