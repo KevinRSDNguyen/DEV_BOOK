@@ -5,7 +5,8 @@ class Register extends Component {
     name: "",
     email: "",
     password: "",
-    password2: ""
+    password2: "",
+    errors: {}
   };
   onChange = e => {
     this.setState({
@@ -14,7 +15,14 @@ class Register extends Component {
   };
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.state);
+    const newUser = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2
+    };
+
+    console.log(newUser);
   };
   render() {
     return (
