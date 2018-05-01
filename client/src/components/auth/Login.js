@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { loginUser } from "./../../actions/authActions";
 import clearErrors from "./../../actions/errorsActions";
 import TextFieldGroup from "./../common/TextFieldGroup";
@@ -9,12 +10,12 @@ class Login extends Component {
     email: "",
     password: ""
   };
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.auth.isAuthenticated) {
-      nextProps.history.push("/dashboard");
-    }
-    return prevState;
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (nextProps.auth.isAuthenticated) {
+  //     nextProps.history.push("/dashboard");
+  //   }
+  //   return prevState;
+  // }
   componentWillUnmount() {
     this.props.clearErrors();
   }
@@ -30,12 +31,16 @@ class Login extends Component {
   };
   render() {
     const { errors } = this.props;
+    let authRedirect = this.props.auth.isAuthenticated ? (
+      <Redirect to="/dashboard" />
+    ) : null;
 
     return (
       <div className="login">
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
+              {authRedirect}
               <h1 className="display-4 text-center">Log In</h1>
               <p className="lead text-center">
                 Sign in to your DevConnector account
