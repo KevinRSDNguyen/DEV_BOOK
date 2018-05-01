@@ -4,6 +4,7 @@ import TextFieldGroup from "./../common/TextFieldGroup";
 import TextAreaFieldGroup from "./../common/TextAreaFieldGroup";
 import InputGroup from "./../common/InputGroup";
 import SelectListGroup from "./../common/SelectListGroup";
+import { createProfile } from "./../../actions/profileActions";
 
 class CreateProfile extends Component {
   state = {
@@ -20,12 +21,11 @@ class CreateProfile extends Component {
     facebook: "",
     linkedin: "",
     youtube: "",
-    instagram: "",
-    errors: {}
+    instagram: ""
   };
   onSubmit = e => {
     e.preventDefault();
-    alert("meow");
+    this.props.createProfile(this.state, this.props.history);
   };
   onChange = e => {
     this.setState({
@@ -33,7 +33,8 @@ class CreateProfile extends Component {
     });
   };
   render() {
-    const { errors, displaySocialInputs } = this.state;
+    const { displaySocialInputs } = this.state;
+    const { errors } = this.props;
 
     let socialInputs;
 
@@ -213,4 +214,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(CreateProfile);
+export default connect(mapStateToProps, { createProfile })(CreateProfile);
