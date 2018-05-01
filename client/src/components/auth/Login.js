@@ -1,27 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { loginUser } from "./../../actions/authActions";
+import clearErrors from "./../../actions/errorsActions";
 import TextFieldGroup from "./../common/TextFieldGroup";
 
 class Login extends Component {
   state = {
     email: "",
-    password: "",
-    errors: {}
+    password: ""
   };
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
-    }
-  }
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+      nextProps.history.push("/dashboard");
     }
-
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
+    return prevState;
+  }
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
   onChange = e => {
     this.setState({
@@ -34,7 +29,7 @@ class Login extends Component {
     this.props.loginUser(userData);
   };
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
 
     return (
       <div className="login">
@@ -79,4 +74,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { loginUser })(Login);
+export default connect(mapStateToProps, { loginUser, clearErrors })(Login);

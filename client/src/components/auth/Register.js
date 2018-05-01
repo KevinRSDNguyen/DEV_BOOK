@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { registerUser } from "./../../actions/authActions";
+import clearErrors from "./../../actions/errorsActions";
 import TextFieldGroup from "./../common/TextFieldGroup";
 
 class Register extends Component {
@@ -8,24 +9,21 @@ class Register extends Component {
     name: "",
     email: "",
     password: "",
-    password2: "",
-    errors: {}
+    password2: ""
   };
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
   }
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
-  }
   onSubmit = e => {
     e.preventDefault();
     const newUser = {
@@ -38,7 +36,7 @@ class Register extends Component {
     this.props.registerUser(newUser, this.props.history);
   };
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
     return (
       <div className="register">
         <div className="container">
@@ -99,4 +97,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { registerUser })(Register);
+export default connect(mapStateToProps, { registerUser, clearErrors })(
+  Register
+);
