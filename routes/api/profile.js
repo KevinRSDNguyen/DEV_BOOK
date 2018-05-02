@@ -134,7 +134,7 @@ router.post(
     if (req.body.githubusername)
       profileFields.githubusername = req.body.githubusername;
     // Skills - Split into array
-    if (typeof req.body.skills !== "undefined") {
+    if (req.body.skills) {
       profileFields.skills = req.body.skills.split(",");
     }
 
@@ -148,10 +148,17 @@ router.post(
 
     Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
-        //Update
-        Profile.findOneAndUpdate({ user: req.user.id }, profileFields, {
-          new: true
-        }).then(profile => res.json(profile));
+        //Check if Handle exists
+        Profile.findOne({ handle: profileFields.handle }).then(profile => {
+          if (profile && req.user.id !== profile.user.toString()) {
+            errors.handle = "That handle already exists";
+            return res.status(400).json(errors);
+          }
+          //Update
+          Profile.findOneAndUpdate({ user: req.user.id }, profileFields, {
+            new: true
+          }).then(profile => res.json(profile));
+        });
       } else {
         //Create
 
