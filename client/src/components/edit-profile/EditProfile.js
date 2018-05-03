@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import TextFieldGroup from "./../common/TextFieldGroup";
 import TextAreaFieldGroup from "./../common/TextAreaFieldGroup";
 import InputGroup from "./../common/InputGroup";
@@ -180,6 +181,9 @@ class EditProfile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
+              <Link to="/dashboard" className="btn btn-light">
+                Go back
+              </Link>
               <h1 className="display-4 text-center">Edit Profile</h1>
               <p className="lead text-center">
                 Let's get some information to make your profile stand out

@@ -89,6 +89,24 @@ export const deleteExperience = id => dispatch => {
     });
 };
 
+//Delete Education
+export const deleteEducation = id => dispatch => {
+  axios
+    .delete(`/api/profile/education/${id}`)
+    .then(({ data }) => {
+      dispatch({
+        type: GET_PROFILE,
+        payload: data
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: response.data
+      });
+    });
+};
+
 //Delete account and profile
 export const deleteAccount = () => dispatch => {
   if (window.confirm("Are you sure? This cannot be undone!")) {
