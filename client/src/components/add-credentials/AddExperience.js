@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import { connect } from "react-redux";
+import { addExperience } from "../../actions/profileActions";
+import clearErrors from "./../../actions/errorsActions";
 
 class AddExperience extends Component {
   state = {
@@ -16,9 +18,28 @@ class AddExperience extends Component {
     errors: {},
     disabled: false //If user clicks current checkbox, set to true
   };
+  componentDidMount() {
+    if (this.props.profile.profile === null) {
+      this.props.history.push("/dashboard");
+    }
+  }
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
   onSubmit = e => {
     e.preventDefault();
-    alert("meow");
+
+    const expData = {
+      company: this.state.company,
+      title: this.state.title,
+      location: this.state.location,
+      from: this.state.from,
+      to: this.state.to,
+      current: this.state.current,
+      description: this.state.description
+    };
+
+    this.props.addExperience(expData, this.props.history);
   };
   onChange = e => {
     this.setState({
@@ -129,4 +150,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(AddExperience);
+export default connect(mapStateToProps, { addExperience, clearErrors })(
+  AddExperience
+);
