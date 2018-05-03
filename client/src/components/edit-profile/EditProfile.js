@@ -33,6 +33,7 @@ class EditProfile extends Component {
     this.props.getCurrentProfile();
   }
   static getDerivedStateFromProps(nextProps, prevState) {
+    //This fills in fields if existing profile comes in
     if (
       nextProps.profile.profile &&
       Object.keys(nextProps.profile.profile).length > 0 //Avoids errors if user accesses this page without a profile aka empty obj
@@ -82,6 +83,14 @@ class EditProfile extends Component {
         youtube: profile.youtube,
         instagram: profile.instagram
       };
+    }
+    //Redirects if user has not created a profile yet
+    if (
+      nextProps.profile.profile &&
+      Object.keys(nextProps.profile.profile).length === 0
+    ) {
+      nextProps.history.push("/dashboard");
+      return prevState;
     }
     return prevState;
   }
