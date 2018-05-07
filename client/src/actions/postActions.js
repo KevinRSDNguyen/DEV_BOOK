@@ -12,6 +12,7 @@ import {
 
 // Add post
 export const addPost = postData => dispatch => {
+  dispatch(clearErrors());
   axios
     .post("/api/posts", postData)
     .then(({ data }) => {
@@ -23,7 +24,14 @@ export const addPost = postData => dispatch => {
     .catch(({ response }) => {
       dispatch({
         type: GET_ERRORS,
-        data: response.data
+        payload: response.data
       });
     });
+};
+
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
 };
