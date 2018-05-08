@@ -48,10 +48,15 @@ router.get(
 // @desc    Get all profiles
 // @access  Public
 router.get("/all", (req, res) => {
+  let skip = parseInt(req.query.skip);
+  let limit = parseInt(req.query.limit);
   const errors = {};
 
   Profile.find()
     .populate("user", ["name", "avatar"])
+    .sort({ date: -1 })
+    .skip(skip)
+    .limit(limit)
     .then(profiles => {
       if (!profiles) {
         errors.noprofile = "There are no profiles for this user";

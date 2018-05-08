@@ -6,8 +6,15 @@ import { getProfiles } from "../../actions/profileActions";
 
 class Profiles extends Component {
   componentDidMount() {
-    this.props.getProfiles();
+    const initialProfilesToLoad = 10;
+    this.props.getProfiles(initialProfilesToLoad);
   }
+  loadMore = () => {
+    const { profiles } = this.props.profile;
+    const skip = profiles.length;
+    const newProfilesToLoad = 10;
+    this.props.getProfiles(newProfilesToLoad, skip, profiles);
+  };
   render() {
     const { profiles, loading } = this.props.profile;
     let profileItems;
@@ -34,6 +41,12 @@ class Profiles extends Component {
                 Browse and connect with Developers
               </p>
               {profileItems}
+              <button
+                onClick={this.loadMore}
+                className="btn btn-lg btn-light d-block m-auto"
+              >
+                Load more Developer Profiles
+              </button>
             </div>
           </div>
         </div>

@@ -128,20 +128,26 @@ export const deleteEducation = id => dispatch => {
 };
 
 //Get all profiles
-export const getProfiles = () => dispatch => {
+export const getProfiles = (limit, start = 0, list = "") => dispatch => {
   dispatch(setProfileLoading());
   axios
-    .get(`/api/profile/all`)
+    .get(`/api/profile/all?limit=${limit}&skip=${start}`)
     .then(({ data }) => {
+      let payload;
+      if (list) {
+        payload = [...list, ...data];
+      } else {
+        payload = data;
+      }
       dispatch({
         type: GET_PROFILES,
-        payload: data
+        payload
       });
     })
     .catch(({ response }) => {
       dispatch({
         type: GET_PROFILES,
-        payload: null
+        payload: []
       });
     });
 };

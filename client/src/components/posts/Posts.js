@@ -11,9 +11,10 @@ class Posts extends Component {
     this.props.getPosts(initialPosts);
   }
   loadMore = () => {
-    let skip = this.props.post.posts.length;
+    const { posts } = this.props.post;
+    const skip = posts.length;
     const newPostsToLoad = 10;
-    this.props.getPosts(newPostsToLoad, skip);
+    this.props.getPosts(newPostsToLoad, skip, posts);
   };
   render() {
     const { posts, loading } = this.props.post;
@@ -34,7 +35,7 @@ class Posts extends Component {
               {postContent}
               <button
                 onClick={this.loadMore}
-                className="btn btn-lg btn-success d-block m-auto"
+                className="btn btn-lg btn-light d-block m-auto"
               >
                 Load more Posts
               </button>
