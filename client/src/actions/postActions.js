@@ -33,6 +33,7 @@ export const addPost = postData => dispatch => {
 // Get Posts
 export const getPosts = () => dispatch => {
   dispatch(setPostLoading());
+  dispatch(clearErrors()); //So feed and comments dont share text error
   axios
     .get("/api/posts")
     .then(({ data }) => {
@@ -52,6 +53,7 @@ export const getPosts = () => dispatch => {
 // Get Post
 export const getPost = id => dispatch => {
   dispatch(setPostLoading());
+  dispatch(clearErrors()); //So feed and comments dont share text error
   axios
     .get(`/api/posts/${id}`)
     .then(({ data }) => {
@@ -127,6 +129,25 @@ export const addComment = (postId, commentData) => dispatch => {
   dispatch(clearErrors());
   axios
     .post(`/api/posts/comment/${postId}`, commentData)
+    .then(({ data }) => {
+      dispatch({
+        type: GET_POST,
+        payload: data
+      });
+    })
+    .catch(({ response }) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: response.data
+      });
+    });
+};
+
+// Delete Comment
+export const deleteComment = (postId, commentId) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .delete(`/api/posts/comment/${postId}/${commentId}`)
     .then(({ data }) => {
       dispatch({
         type: GET_POST,
