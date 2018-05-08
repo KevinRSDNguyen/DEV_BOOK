@@ -21,8 +21,13 @@ router.get("/test", (req, res) => {
 // @desc    Get all posts
 // @access  Public
 router.get("/", (req, res) => {
+  let skip = parseInt(req.query.skip);
+  let limit = parseInt(req.query.limit);
+
   Post.find()
     .sort({ date: -1 })
+    .skip(skip)
+    .limit(limit)
     .then(posts => {
       res.json(posts);
     })

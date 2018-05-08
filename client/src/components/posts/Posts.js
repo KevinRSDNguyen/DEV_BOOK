@@ -7,8 +7,14 @@ import { getPosts } from "../../actions/postActions";
 
 class Posts extends Component {
   componentDidMount() {
-    this.props.getPosts();
+    const initialPosts = 10;
+    this.props.getPosts(initialPosts);
   }
+  loadMore = () => {
+    let skip = this.props.post.posts.length;
+    const newPostsToLoad = 10;
+    this.props.getPosts(newPostsToLoad, skip);
+  };
   render() {
     const { posts, loading } = this.props.post;
     let postContent;
@@ -26,6 +32,12 @@ class Posts extends Component {
             <div className="col-md-12">
               <PostForm />
               {postContent}
+              <button
+                onClick={this.loadMore}
+                className="btn btn-lg btn-success d-block m-auto"
+              >
+                Load more Posts
+              </button>
             </div>
           </div>
         </div>

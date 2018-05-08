@@ -31,11 +31,11 @@ export const addPost = postData => dispatch => {
 };
 
 // Get Posts
-export const getPosts = () => dispatch => {
+export const getPosts = (limit, start = 0) => dispatch => {
   dispatch(setPostLoading());
   dispatch(clearErrors()); //So feed and comments dont share text error
   axios
-    .get("/api/posts")
+    .get(`/api/posts?limit=${limit}&skip=${start}`)
     .then(({ data }) => {
       dispatch({
         type: GET_POSTS,
