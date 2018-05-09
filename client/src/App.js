@@ -60,6 +60,7 @@ class App extends Component {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/profiles" component={Profiles} />
                 <Route exact path="/profile/:handle" component={Profile} />
+                <Route exact path="/feed" component={Posts} />
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute
                   exact
@@ -82,7 +83,6 @@ class App extends Component {
                   component={AddEducation}
                 />
                 <PrivateRoute exact path="/post/:id" component={Post} />
-                <PrivateRoute exact path="/feed" component={Posts} />
                 <Route component={NotFound} />
               </Switch>
             </div>

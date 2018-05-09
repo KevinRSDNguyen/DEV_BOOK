@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Aux from "./../../hoc/Auxx/Auxx";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser } from "./../../actions/authActions";
@@ -14,17 +15,13 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     const authLinks = (
-      <ul className="navbar-nav ml-auto">
-        <li className="nav-item">
-          <Link className="nav-link" to="/feed">
-            Post Feed
-          </Link>
-        </li>
+      <Aux>
         <li className="nav-item">
           <Link className="nav-link" to="/dashboard">
             Dashboard
           </Link>
         </li>
+
         <li className="nav-item">
           <a href="" onClick={this.onLogoutClick} className="nav-link">
             <img
@@ -36,11 +33,11 @@ class Navbar extends Component {
             Logout
           </a>
         </li>
-      </ul>
+      </Aux>
     );
 
     const guestLinks = (
-      <ul className="navbar-nav ml-auto">
+      <Aux>
         <li className="nav-item">
           <Link className="nav-link" to="/register">
             Sign Up
@@ -51,7 +48,7 @@ class Navbar extends Component {
             Login
           </Link>
         </li>
-      </ul>
+      </Aux>
     );
 
     return (
@@ -78,7 +75,14 @@ class Navbar extends Component {
                 </Link>
               </li>
             </ul>
-            {isAuthenticated ? authLinks : guestLinks}
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link className="nav-link" to="/feed">
+                  Post Feed
+                </Link>
+              </li>
+              {isAuthenticated ? authLinks : guestLinks}
+            </ul>
           </div>
         </div>
       </nav>

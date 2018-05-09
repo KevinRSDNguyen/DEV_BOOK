@@ -18,6 +18,7 @@ class Posts extends Component {
   };
   render() {
     const { posts, loading } = this.props.post;
+    const { isAuthenticated } = this.props.auth;
     let postContent;
 
     if (posts === null || loading) {
@@ -31,7 +32,7 @@ class Posts extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <PostForm />
+              {isAuthenticated ? <PostForm /> : null}
               {postContent}
               <button
                 onClick={this.loadMore}
@@ -49,7 +50,8 @@ class Posts extends Component {
 
 const mapStateToProps = state => {
   return {
-    post: state.post
+    post: state.post,
+    auth: state.auth
   };
 };
 
